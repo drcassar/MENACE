@@ -4,23 +4,21 @@ a biblioteca pygame.
 
 :)
 """
-
-# Importações
 import pygame, sys
 from files.gui import *
 from files.api import *
+
+RUNNING = True
+FPS = 60
+PAUSADO = [False, False]
+LOADING = False
 
 
 # ------------------------------------ Configurações iniciais
 pygame.init()
 clock = pygame.time.Clock()
-running = True
-FPS = 60
-pausado = [False, False]
 pygame.event.set_allowed([pygame.KEYDOWN, pygame.QUIT, pygame.MOUSEBUTTONDOWN])
 font = pygame.font.Font("files/assets/basis33.ttf", 50)
-loading = False
-
 lista_konami = ["0" for _ in range(10)]
 
 # Janela:
@@ -50,7 +48,7 @@ Player_group.add(player)
 
 # Menace:
 menace = Menace(not player.isX)
-if loading:
+if LOADING:
     menace.load_pickles(lista_de_listas)
 
 # Animação:
@@ -82,13 +80,13 @@ for i in range(9):
 
 
 # ------------------------------------ Loop do jogo
-while running:
+while RUNNING:
     events = pygame.event.get()
 
     lista_konami = konami(events, lista_konami)
     if lista_konami == True:
         menace.save_pickles(lista_de_listas)
-        running = False
+        RUNNING = False
 
     # Checagem de eventos:
     for event in events:
@@ -106,42 +104,42 @@ while running:
 ------------------------"
                 )
             # Recomeçar partida atual (R)
-            if event.key == pygame.K_r and not pausado[0]:
+            if event.key == pygame.K_r and not PAUSADO[0]:
                 animacao_group.empty()
-                pausado[0] = True
+                PAUSADO[0] = True
                 reset_game(caixinhas_group)
                 menace.menace.jogadas = []
                 mixer.stop()
             # Continuar depois do final de uma partida (Enter)
-            if pausado and event.key == pygame.K_RETURN:
+            if PAUSADO and event.key == pygame.K_RETURN:
                 animacao_group.empty()
-                pausado[0] = False
-                if pausado[1]:
-                    pausado[0] = True
-                    pausado[1] = False
+                PAUSADO[0] = False
+                if PAUSADO[1]:
+                    PAUSADO[0] = True
+                    PAUSADO[1] = False
                     reset_game(caixinhas_group)
                 mixer.stop()
 
-    if pausado[1]:
-        pausado[1] -= 1
-        if not pausado[1]:
+    if PAUSADO[1]:
+        PAUSADO[1] -= 1
+        if not PAUSADO[1]:
             reset_game(caixinhas_group)
 
     if (
         (player.isX)
         and (get_string(caixinhas_group) == "000000000")
-        and (not pausado[0])
+        and (not PAUSADO[0])
     ):
         menace.jogada(
             caixinhas_group,
             lista_de_listas,
             animacao_group,
-            pausado,
+            PAUSADO,
             prob_group,
         )
 
     # Updates:
-    if (not pausado[0]) or (pausado[1]):
+    if (not PAUSADO[0]) or (PAUSADO[1]):
         screen.blit(background, (0, 0))
 
         caixinhas_group.draw(screen)
@@ -151,16 +149,16 @@ while running:
             caixinhas_group,
             lista_de_listas,
             animacao_group,
-            pausado,
+            PAUSADO,
             prob_group,
         )
 
-    if ((len(animacao_group) != 0) or (pausado[0])) and (not pausado[1]):
+    if ((len(animacao_group) != 0) or (PAUSADO[0])) and (not PAUSADO[1]):
         screen.fill((0, 0, 0))
-    if ((len(animacao_group) == 0) and (pausado[0])) and (not pausado[1]):
+    if ((len(animacao_group) == 0) and (PAUSADO[0])) and (not PAUSADO[1]):
         proximo_group.draw(screen)
 
-    if (not pausado[0]) or (pausado[1]):
+    if (not PAUSADO[0]) or (PAUSADO[1]):
         prob_group.draw(screen)
         prob_group.update()
 
