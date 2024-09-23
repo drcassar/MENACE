@@ -445,7 +445,15 @@ def simulacao(player1, player2, num_jogos=100):
     return player1, player2, vitorias1, vitorias2, empates
 
 
-def plot(vitorias1, vitorias2, empates, plot_name="", show=False, label1="Vitórias 1", label2="Vitórias 2"):
+def plot(
+    vitorias1,
+    vitorias2,
+    empates,
+    plot_name="",
+    show=False,
+    label1="Vitórias 1",
+    label2="Vitórias 2",
+):
     fig, axe = plt.subplots(
         ncols=1,
         nrows=1,
