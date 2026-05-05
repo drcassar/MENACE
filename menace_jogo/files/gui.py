@@ -16,6 +16,22 @@ from menace_jogo.files.api import Configuracao, Jogador
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
+    "-t",
+    "--treino",
+    type=int,
+    default=0,
+    help="Quantidade de jogos para treinar o MENACE",
+)
+
+parser.add_argument(
+    "-n",
+    "--nivel",
+    type=str,
+    default="",
+    help="Nível de desafio: fácil, médio, difícil ou impossível",
+)
+
+parser.add_argument(
     "-p",
     "--primeiro",
     type=str,
