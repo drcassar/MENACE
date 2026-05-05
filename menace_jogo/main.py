@@ -66,15 +66,17 @@ def main():
     if args.nivel:
         if args.nivel in ["facil", "Facil", "fácil", "Fácil"]:
             TREINO = 500
-        if args.nivel in ["medio", "Medio", "médio", "Médio"]:
+        elif args.nivel in ["medio", "Medio", "médio", "Médio"]:
             TREINO = 1000
-        if args.nivel in ["dificil", "Dificil", "difícil", "Difícil"]:
+        elif args.nivel in ["dificil", "Dificil", "difícil", "Difícil"]:
             TREINO = 5000
-        if args.nivel in ["impossivel", "Impossivel", "impossível", "Impossível"]:
+        elif args.nivel in ["impossivel", "Impossivel", "impossível", "Impossível"]:
             TREINO = 10000
+        else:
+            TREINO = 0
 
     if args.primeiro:
-        if args.nivel in [
+        if args.primeiro in [
             "menace",
             "MENACE",
             "Menace",
@@ -84,8 +86,10 @@ def main():
             "Maquina",
         ]:
             computer_starts = True
-        if args.nivel in ["humano", "Humano", "eu", "Eu"]:
+        elif args.primeiro in ["humano", "Humano", "eu", "Eu"]:
             computer_starts = False
+        else:
+            computer_starts = True
 
     ###############################################################################
     #                            Configurações iniciais                           #
