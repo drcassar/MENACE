@@ -127,7 +127,7 @@ def main():
     Player_group.add(player)
 
     # Menace:
-    menace = Menace(not player.isX)
+    menace = Menace(not computer_starts)
 
     if LOADING:
         menace.load_pickles(lista_de_listas)
