@@ -48,6 +48,12 @@ uvx --from git+https://github.com/drcassar/MENACE menace --nivel dificil
 uvx --from git+https://github.com/drcassar/MENACE menace --nivel impossivel
 ```
 
+Se você desejar ser o primeiro a jogar, adicione um `--primeiro humano` ao comando.
+
+```sh
+uvx --from git+https://github.com/drcassar/MENACE menace --nivel dificil --primeiro humano
+```
+
 ## Alguns cuidados antes de rodar o MENACE:
 	
 * Foi implementada uma trava para o jogo não ser fechado sem querer/fora de hora por jogadores em eventos! Por isso, a combinação Alt + F4 não vai fechar a tela! Tome cuidado com isso! O único jeito de sair da tela fullscreen e fechar a janela é digitando o Konami code!!!! ( ↑ ↑ ↓ ↓ ← → ← → B A )
