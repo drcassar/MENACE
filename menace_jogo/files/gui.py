@@ -10,7 +10,7 @@ import pickle
 import pygame as pg
 from pygame import mixer
 
-from files.api import Configuracao, Jogador
+from menace_jogo.files.api import Configuracao, Jogador
 
 
 # -------------------------------- Config: ------------------------------- #
