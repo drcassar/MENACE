@@ -5,18 +5,63 @@ na implementação da interface gráfica do MENACE!
 :)
 """
 
+import argparse
 import pickle
 
 import pygame as pg
 from pygame import mixer
 
-from files.api import Configuracao, Jogador
+from menace_jogo.files.api import Configuracao, Jogador
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-t",
+    "--treino",
+    type=int,
+    default=0,
+    help="Quantidade de jogos para treinar o MENACE",
+)
+
+parser.add_argument(
+    "-n",
+    "--nivel",
+    type=str,
+    default="",
+    help="Nível de desafio: fácil, médio, difícil ou impossível",
+)
+
+parser.add_argument(
+    "-p",
+    "--primeiro",
+    type=str,
+    default="MENACE",
+    help="O primeiro jogador será o MENACE ou o humano?",
+)
+
+args = parser.parse_args()
+
+if args.primeiro:
+    if args.primeiro in [
+        "menace",
+        "MENACE",
+        "Menace",
+        "máquina",
+        "Máquina",
+        "maquina",
+        "Maquina",
+    ]:
+        computer_starts = True
+    elif args.primeiro in ["humano", "Humano", "eu", "Eu"]:
+        computer_starts = False
+    else:
+        computer_starts = True
 
 
 # -------------------------------- Config: ------------------------------- #
 brain_save_path = "files/assets/brain.pickle"
 history_save_path = "files/assets/history.pickle"
-computer_starts = True
+# computer_starts = True
 
 # -------------------------------- Display: ------------------------------- #
 scale_factor = 10  # para os sprites

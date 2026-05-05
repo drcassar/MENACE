@@ -20,47 +20,41 @@ Essa capacidade de receber um feedback demonstra a super habilidade do MENACE: o
 **E aí, está preparado para enfrentar esse desafio?**
 
 
-## Como instalar o MENACE?
+## Como rodar o MENACE?
 
-Para poder jogar contra o MENACE do seu próprio computador, tudo que você precisa fazer é clonar este repositório!
+A forma mais fácil de rodar o MENACE é usando o `uv`. Para instalar o `uv`, siga o guia na página oficial: https://docs.astral.sh/uv/getting-started/installation/.
 
-O código do jogo foi escrito em Python, utilizando de algumas bibliotecas para realizar diferentes funções. Para que seja possível rodar o MENACE sem se deparar com problemas, instale essas bibliotecas utilizando o comando abaixo no terminal:
+Tendo instalado o `uv`, basta rodar o comando abaixo no terminal.
 
 ```sh
-pip install pygame numpy matplotlib
+uvx --from git+https://github.com/drcassar/MENACE menace
 ```
 
-
-## Como fazer para rodar?
-
-Basta executar o arquivo [`main.py`](./main.py) usando o Python. Certifique-se que está no ambiente virtual onde instalou o pygame e numpy, do contrário pode ocorrer algum erro. Com o terminal aberto na pasta deste repositório, utilize o comando:
+O comando acima inicia um agente MENACE do zero, sem nenhum treinamento, ideal para observar o processo de aprendizado desde o início. Você pode configurar a dificuldade do MENACE escolhendo um dos 4 comandos abaixo.
 
 ```sh
-python main.py
-```
-
-O comando acima inicia um agente MENACE do zero, sem nenhum treinamento. Você pode configurar a dificuldade do MENACE escolhendo um dos 4 comandos abaixo.
-
-```sh
-python main.py --nivel facil
+uvx --from git+https://github.com/drcassar/MENACE menace --nivel facil
 ```
 
 ```sh
-python main.py --nivel medio
+uvx --from git+https://github.com/drcassar/MENACE menace --nivel medio
 ```
 
 ```sh
-python main.py --nivel dificil
+uvx --from git+https://github.com/drcassar/MENACE menace --nivel dificil
 ```
 
 ```sh
-python main.py --nivel impossivel
+uvx --from git+https://github.com/drcassar/MENACE menace --nivel impossivel
 ```
 
+Se você desejar ser o primeiro a jogar, adicione um `--primeiro humano` ao comando.
+
+```sh
+uvx --from git+https://github.com/drcassar/MENACE menace --nivel dificil --primeiro humano
+```
 
 ## Alguns cuidados antes de rodar o MENACE:
-	
-* Confira se você tem as bibliotecas `pygame` e `numpy` instaladas antes de tentar abrir qualquer arquivo!
 	
 * Foi implementada uma trava para o jogo não ser fechado sem querer/fora de hora por jogadores em eventos! Por isso, a combinação Alt + F4 não vai fechar a tela! Tome cuidado com isso! O único jeito de sair da tela fullscreen e fechar a janela é digitando o Konami code!!!! ( ↑ ↑ ↓ ↓ ← → ← → B A )
 
