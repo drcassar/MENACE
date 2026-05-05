@@ -21,7 +21,7 @@ def main():
         Probabilidades,
         display_center,
         get_string,
-        computer_starts,
+        # computer_starts,
         konami,
         mixer,
         reset_game,
@@ -51,19 +51,41 @@ def main():
         help="Nível de desafio: fácil, médio, difícil ou impossível",
     )
 
+    parser.add_argument(
+        "-p",
+        "--primeiro",
+        type=str,
+        default="MENACE",
+        help="O primeiro jogador será o MENACE ou o humano?",
+    )
+
     args = parser.parse_args()
 
     TREINO = args.treino
 
     if args.nivel:
         if args.nivel in ["facil", "Facil", "fácil", "Fácil"]:
-            TREINO = 200
-        if args.nivel in ["medio", "Medio", "médio", "Médio"]:
             TREINO = 500
-        if args.nivel in ["dificil", "Dificil", "difícil", "Difícil"]:
+        if args.nivel in ["medio", "Medio", "médio", "Médio"]:
             TREINO = 1000
-        if args.nivel in ["impossivel", "Impossivel", "impossível", "Impossível"]:
+        if args.nivel in ["dificil", "Dificil", "difícil", "Difícil"]:
             TREINO = 5000
+        if args.nivel in ["impossivel", "Impossivel", "impossível", "Impossível"]:
+            TREINO = 10000
+
+    if args.primeiro:
+        if args.nivel in [
+            "menace",
+            "MENACE",
+            "Menace",
+            "máquina",
+            "Máquina",
+            "maquina",
+            "Maquina",
+        ]:
+            computer_starts = True
+        if args.nivel in ["humano", "Humano", "eu", "Eu"]:
+            computer_starts = False
 
     ###############################################################################
     #                            Configurações iniciais                           #
@@ -102,10 +124,11 @@ def main():
 
     # Menace:
     menace = Menace(not player.isX)
-    menace.menace.self_train(TREINO)
 
     if LOADING:
         menace.load_pickles(lista_de_listas)
+    else:
+        menace.menace.self_train(TREINO)
 
     # Animação:
     animacao_group = pg.sprite.Group()
