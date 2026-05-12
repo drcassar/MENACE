@@ -132,3 +132,5 @@ dmypy.json
 # Python Pickle (brain)
 *.pkl
 **/*.pkl
+*.pickle
+**/*.pickle
