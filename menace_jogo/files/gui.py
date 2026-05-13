@@ -11,7 +11,7 @@ import pickle
 import pygame as pg
 from pygame import mixer
 
-from menace_jogo.files.api import Configuracao, Jogador
+from menace_jogo.files.api import Configuracao, Jogador, simulacao
 
 parser = argparse.ArgumentParser()
 
@@ -582,3 +582,93 @@ class Probabilidades(pg.sprite.Sprite):
 
     def update(self):
         self.display.blit(self.text, self.prob_rect)
+
+class Simulacao(pg.sprite.Sprite):
+    """
+    Classe para armazenar, processar e renderizar as informações durante o treinamento.
+
+    """
+
+    def __init__(self, display, font, jogador):
+        super().__init__()
+        self.font = font
+        self.display = display
+        
+        # Variáveis de contagem
+        self.contagem_treino = 0
+        self.contagem_vitorias = 0
+        self.contagem_derrotas = 0
+        self.contagem_empates = 0
+        self.jogador = jogador
+        self.adversario_dummy = Jogador(
+            2,
+            reforco_vitoria=0,
+            reforco_derrota=0,
+        )
+        
+
+        # Texto de vitórias, derrotas e empate
+        self.text = self.font.render("", True, (255, 255, 255))
+        self.text_rect = self.text.get_rect()
+        self.text_rect.midbottom = (DISPLAY_W / 2, DISPLAY_H - 70)
+
+        # Contagem de partidas simuladas
+        self.text_contagem = self.font.render("NRO DE PARTIDAS: 0", True, (255, 255, 255))
+        self.text_contagem_rect = self.text_contagem.get_rect()
+        self.text_contagem_rect.midbottom = (DISPLAY_W / 2, DISPLAY_H - 70)
+
+        # Retângulo da borda
+        self.retangulo_borda = pg.Rect(0, 0, 900, 160)
+        self.retangulo_borda.center = (DISPLAY_W / 2, DISPLAY_H / 2)
+
+        # Retângulo de vitórias
+        self.retangulo_vitorias = pg.Rect(0, 0, 880, 140)
+        self.retangulo_vitorias.center = (DISPLAY_W / 2, DISPLAY_H / 2)
+
+        # Retângulo de empates
+        self.retangulo_empates = pg.Rect(0, 0, 880, 140)
+        self.retangulo_empates.center = (DISPLAY_W / 2, DISPLAY_H / 2)
+
+        # Retângulo de derrotas
+        self.retangulo_derrotas = pg.Rect(0, 0, 880, 140)
+        self.retangulo_derrotas.center = (DISPLAY_W / 2, DISPLAY_H / 2)
+
+    def render(self):
+        # Texto de vitórias, derrotas e empate
+        self.text = self.font.render(f"Vitórias: {self.contagem_vitorias} | Empates: {self.contagem_empates} |  Derrotas: {self.contagem_derrotas}", True, (255, 255, 255))
+        self.text_rect = self.text.get_rect()
+        self.text_rect.midbottom = (DISPLAY_W / 2, DISPLAY_H - 70)
+        self.display.blit(self.text, self.text_rect)
+        
+        # Contagem de partidas simuladas
+        self.text_contagem = self.font.render(f"NRO DE PARTIDAS: {self.contagem_treino}", True, (255, 255, 255))
+        self.text_contagem_rect = self.text_contagem.get_rect()
+        self.text_contagem_rect.midtop = (DISPLAY_W / 2, 70)
+        self.display.blit(self.text_contagem, self.text_contagem_rect)
+        
+        # Retângulo da borda
+        pg.draw.rect(self.display, (50, 50, 50), self.retangulo_borda)
+
+        # Retângulo de vitórias
+        self.retangulo_vitorias.width = 880 * (self.contagem_vitorias / self.contagem_treino)
+        self.retangulo_vitorias.midleft = ((DISPLAY_W / 2) - 440, DISPLAY_H / 2)
+        pg.draw.rect(self.display, (50, 230, 50), self.retangulo_vitorias)
+
+        # Retângulo de empates
+        self.retangulo_empates.width = (880 * (self.contagem_empates / self.contagem_treino)) + 10
+        self.retangulo_empates.midleft = self.retangulo_vitorias.midright
+        pg.draw.rect(self.display, (230, 230, 50), self.retangulo_empates)
+
+        # Retângulo de derrotas
+        self.retangulo_derrotas.width = 880 * (self.contagem_derrotas / self.contagem_treino)
+        self.retangulo_derrotas.midright = ((DISPLAY_W / 2) + 440, DISPLAY_H / 2)
+        pg.draw.rect(self.display, (230, 50, 50), self.retangulo_derrotas)
+
+    def simula_partida(self, nro_partidas=1):
+        self.jogador, _, vitorias, derrotas, empates = simulacao(self.jogador, self.adversario_dummy, nro_partidas)
+        
+        self.contagem_vitorias += vitorias[-1]
+        self.contagem_derrotas += derrotas[-1]
+        self.contagem_empates += empates[-1]
+        self.contagem_treino += nro_partidas
+        return

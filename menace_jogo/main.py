@@ -19,6 +19,7 @@ def main():
         Menace,
         Player,
         Probabilidades,
+        Simulacao,
         display_center,
         get_string,
         # computer_starts,
@@ -131,8 +132,6 @@ def main():
 
     if LOADING:
         menace.load_pickles(lista_de_listas)
-    else:
-        menace.menace.self_train(TREINO)
 
     # Animação:
     animacao_group = pg.sprite.Group()
@@ -160,6 +159,9 @@ def main():
     for i in range(9):
         prob_nova = Probabilidades("0%", i + 1, screen, font)
         prob_group.add(prob_nova)
+
+    # Simulação:
+    simulacao = Simulacao(screen, font, menace.menace)
 
     ###############################################################################
     #                                 Loop do jogo                                #
@@ -207,6 +209,16 @@ def main():
                         PAUSADO[1] = False
                         reset_game(caixinhas_group)
                     mixer.stop()
+
+        
+        # Simula os jogos caso ainda precise treinar
+        if simulacao.contagem_treino < TREINO:
+            screen.fill((0, 0, 0))
+            simulacao.simula_partida(TREINO // 200)
+            simulacao.render()
+            pg.display.update()
+            clock.tick(FPS)
+            continue
 
         if PAUSADO[1]:
             PAUSADO[1] -= 1
