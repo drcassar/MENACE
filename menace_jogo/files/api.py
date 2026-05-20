@@ -438,7 +438,7 @@ class Jogador:
             case "slow learner":
                 adversario = Jogador(
                     oponente_num,
-                    reforco_vitoria=0.1,
+                    reforco_vitoria=0.3,
                     reforco_derrota=0.1,
                 )
 
