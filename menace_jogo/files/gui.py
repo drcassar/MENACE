@@ -680,7 +680,13 @@ class Simulacao(pg.sprite.Sprite):
     def simula_partida(self, nro_partidas=1, strategy="slow learner"):
         vitorias, derrotas, empates, _ = self.jogador.self_train(nro_partidas, strategy)
 
-        self.contagem_vitorias += vitorias[-1]
-        self.contagem_derrotas += derrotas[-1]
         self.contagem_empates += empates[-1]
         self.contagem_treino += nro_partidas
+
+        # POG para mostrar corretamente quando o primeiro jogador é humano
+        if self.jogador.player_num == 2:
+            self.contagem_vitorias += vitorias[-1]
+            self.contagem_derrotas += derrotas[-1]
+        else:
+            self.contagem_vitorias += derrotas[-1]
+            self.contagem_derrotas += vitorias[-1]
