@@ -48,10 +48,18 @@ uvx --from git+https://github.com/drcassar/MENACE menace --nivel dificil
 uvx --from git+https://github.com/drcassar/MENACE menace --nivel impossivel
 ```
 
+Nota: apesar do nível se chamar `impossível`, a probabilidade de você ganhar do MENACE não é zero.
+
 Se você desejar ser o primeiro a jogar, adicione um `--primeiro humano` ao comando.
 
 ```sh
 uvx --from git+https://github.com/drcassar/MENACE menace --nivel dificil --primeiro humano
+```
+
+Alternativamente, você pode controlar a dificuldade do jogo com a flag `--treino`. O nível de dificuldade fácil treina por 500 iterações, o nível médio treina por 1000, o nível difícil treina por 5.000 e o nível impossível treina por 10.000. Se você tiver paciência, nada te impede de usar um valor maior e deixar o MENACE ainda mais difícil de ser derrotado.
+
+```sh
+uvx --from git+https://github.com/drcassar/MENACE menace --treino 20000
 ```
 
 ## Alguns cuidados antes de rodar o MENACE:
