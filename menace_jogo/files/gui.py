@@ -684,7 +684,7 @@ class Simulacao(pg.sprite.Sprite):
         self.contagem_treino += nro_partidas
 
         # POG para mostrar corretamente quando o primeiro jogador é humano
-        if self.jogador.player_num == 2:
+        if self.jogador.player_num != 2:
             self.contagem_vitorias += vitorias[-1]
             self.contagem_derrotas += derrotas[-1]
         else:
