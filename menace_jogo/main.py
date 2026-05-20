@@ -210,11 +210,10 @@ def main():
                         reset_game(caixinhas_group)
                     mixer.stop()
 
-        
         # Simula os jogos caso ainda precise treinar
         if simulacao.contagem_treino < TREINO:
             screen.fill((0, 0, 0))
-            simulacao.simula_partida(TREINO // 200)
+            simulacao.simula_partida(100)
             simulacao.render()
             pg.display.update()
             clock.tick(FPS)
