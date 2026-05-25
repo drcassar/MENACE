@@ -203,17 +203,17 @@ class Jogador:
         Valor 1 representa jogador que faz primeiro movimento (bolinha) e valor
         2 representa o outro jogador (xizinho).
       valor_inicial : int
-        Quantidade de missangas de cada cor distribuidas inicialmente nas caixas
+        Quantidade de miçangas de cada cor distribuidas inicialmente nas caixas
         de fósforo. Este valor é válido para a primeira rodada. As demais
-        rodadas terão menos missangas de acordo com o `decay_do_valor_inicial`.
+        rodadas terão menos miçangas de acordo com o `decay_do_valor_inicial`.
       reforco_vitoria : int
-        Quantidade de missangas adicionadas quando se ganha.
+        Quantidade de miçangas adicionadas quando se ganha.
       reforco_derrota : int
-        Quantidade de missangas adicionadas quando se perde.
+        Quantidade de miçangas adicionadas quando se perde.
       reforco_empate : int
-        Quantidade de missangas adicionadas quando se empata.
+        Quantidade de miçangas adicionadas quando se empata.
       decay_do_valor_inicial : int
-        Redução do número inicial de missangas a cada rodada
+        Redução do número inicial de miçangas a cada rodada
 
     """
 
@@ -404,7 +404,7 @@ class Jogador:
             if dicionario[casa_escolhida] < 0:
                 dicionario[casa_escolhida] = 0
 
-            # se uma caixa está sem missangas, temos que resetá-la
+            # se uma caixa está sem miçangas, temos que resetá-la
             if sum(list(dicionario.values())) <= 0:
                 for k in dicionario:
                     dicionario[k] = 1
