@@ -302,6 +302,8 @@ class Jogador:
 
         if id_.count("0") == 1:
             # apenas uma jogada a ser feita, não temos escolha
+            # também não precisamos registrar no brain
+            # uma vez que não há nada a aprender
             array = config.desencolhe()
             logic = array == 0
             array[logic] = self.player_num
