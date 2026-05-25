@@ -62,7 +62,7 @@ class Configuracao:
             self.config = np.array(representacao, dtype=int)
 
         msg = "Tua configuração deve ter 9 posições"
-        assert len(self.config.ravel() == 9), msg
+        assert len(self.config.ravel()) == 9, msg
         self.config = self.config.reshape(3, 3)
         self.esta_encolhido = False
         self.lista = list(self.config.ravel())
@@ -163,10 +163,10 @@ class Configuracao:
             num_beads = initial_value / decay
         elif num_empty >= 4:
             # terceira jogada do jogador 1 ou 2
-            num_beads = (initial_value / decay) / decay
+            num_beads = initial_value / decay**2
         elif num_empty >= 2:
             # quarta jogada do jogador 1 ou 2
-            num_beads = ((initial_value / decay) / decay) / decay
+            num_beads = initial_value / decay**3
 
         num_beads = int(round(num_beads))
         num_beads = num_beads if num_beads > 0 else 1
@@ -203,17 +203,17 @@ class Jogador:
         Valor 1 representa jogador que faz primeiro movimento (bolinha) e valor
         2 representa o outro jogador (xizinho).
       valor_inicial : int
-        Quantidade de missangas de cada cor distribuidas inicialmente nas caixas
+        Quantidade de miçangas de cada cor distribuidas inicialmente nas caixas
         de fósforo. Este valor é válido para a primeira rodada. As demais
-        rodadas terão menos missangas de acordo com o `decay_do_valor_inicial`.
+        rodadas terão menos miçangas de acordo com o `decay_do_valor_inicial`.
       reforco_vitoria : int
-        Quantidade de missangas adicionadas quando se ganha.
+        Quantidade de miçangas adicionadas quando se ganha.
       reforco_derrota : int
-        Quantidade de missangas adicionadas quando se perde.
+        Quantidade de miçangas adicionadas quando se perde.
       reforco_empate : int
-        Quantidade de missangas adicionadas quando se empata.
+        Quantidade de miçangas adicionadas quando se empata.
       decay_do_valor_inicial : int
-        Redução do número inicial de missangas a cada rodada
+        Redução do número inicial de miçangas a cada rodada
 
     """
 
@@ -302,6 +302,8 @@ class Jogador:
 
         if id_.count("0") == 1:
             # apenas uma jogada a ser feita, não temos escolha
+            # também não precisamos registrar no brain
+            # uma vez que não há nada a aprender
             array = config.desencolhe()
             logic = array == 0
             array[logic] = self.player_num
@@ -360,25 +362,25 @@ class Jogador:
             else:
                 return config_up
 
+    @staticmethod
+    def cleaning(dicionario):
+
+        # não pode ter número negativo
+        for chave in dicionario:
+            if dicionario[chave] < 0:
+                dicionario[chave] = 0
+
+        # deve haver pelo menos uma miçanga
+        if sum(list(dicionario.values())) <= 0:
+            for chave in dicionario:
+                dicionario[chave] = 1
+
     def atualizar_vitoria(self):
         """Atualiza os dicionários de escolha em caso de vitória."""
 
         for n, (dicionario, casa_escolhida) in enumerate(self.jogadas, start=1):
-            if self.reforco_vitoria and (n == len(self.jogadas)):
-                # Queremos sempre repetir a jogada vitoriosa
-                for k in dicionario:
-                    dicionario[k] = 0
-                dicionario[casa_escolhida] = 1
-            else:
-                dicionario[casa_escolhida] += self.reforco_vitoria
-
-                if dicionario[casa_escolhida] < 0:
-                    dicionario[casa_escolhida] = 0
-
-                # se uma caixa está sem missangas, temos que resetá-la
-                if sum(list(dicionario.values())) <= 0:
-                    for k in dicionario:
-                        dicionario[k] = 1
+            dicionario[casa_escolhida] += self.reforco_vitoria
+            self.cleaning(dicionario)
 
         self.jogadas = []
         self.num_jogos += 1
@@ -387,20 +389,8 @@ class Jogador:
         """Atualiza os dicionários de escolha em caso de derrota."""
 
         for n, (dicionario, casa_escolhida) in enumerate(self.jogadas, start=1):
-            if self.reforco_derrota and (n == len(self.jogadas)):
-                # Não queremos repetir a última jogada quando se perde
-                dicionario[casa_escolhida] = 0
-            else:
-                dicionario[casa_escolhida] += self.reforco_derrota
-
-                #  para não ter número negativo
-                if dicionario[casa_escolhida] < 0:
-                    dicionario[casa_escolhida] = 0
-
-            # se uma caixa está sem missangas, temos que resetá-la
-            if sum(list(dicionario.values())) <= 0:
-                for k in dicionario:
-                    dicionario[k] = 1
+            dicionario[casa_escolhida] += self.reforco_derrota
+            self.cleaning(dicionario)
 
         self.jogadas = []
         self.num_jogos += 1
@@ -414,7 +404,7 @@ class Jogador:
             if dicionario[casa_escolhida] < 0:
                 dicionario[casa_escolhida] = 0
 
-            # se uma caixa está sem missangas, temos que resetá-la
+            # se uma caixa está sem miçangas, temos que resetá-la
             if sum(list(dicionario.values())) <= 0:
                 for k in dicionario:
                     dicionario[k] = 1
@@ -439,21 +429,21 @@ class Jogador:
                 adversario = Jogador(
                     oponente_num,
                     reforco_vitoria=0.3,
-                    reforco_derrota=0.1,
+                    reforco_derrota=-0.1,
                 )
 
             case _:
                 adversario = Jogador(oponente_num)
 
         if self.player_num == 1:
-            self, adversario, vitorias, derrotas, empates = simulacao(
+            _, adversario, vitorias, derrotas, empates = simulacao(
                 self,
                 adversario,
                 num_jogos,
             )
 
         else:
-            adversario, self, vitorias, derrotas, empates = simulacao(
+            adversario, _, vitorias, derrotas, empates = simulacao(
                 adversario,
                 self,
                 num_jogos,
