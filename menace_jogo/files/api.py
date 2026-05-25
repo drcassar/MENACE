@@ -62,7 +62,7 @@ class Configuracao:
             self.config = np.array(representacao, dtype=int)
 
         msg = "Tua configuração deve ter 9 posições"
-        assert len(self.config.ravel() == 9), msg
+        assert len(self.config.ravel()) == 9, msg
         self.config = self.config.reshape(3, 3)
         self.esta_encolhido = False
         self.lista = list(self.config.ravel())
