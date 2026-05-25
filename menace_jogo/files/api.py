@@ -163,10 +163,10 @@ class Configuracao:
             num_beads = initial_value / decay
         elif num_empty >= 4:
             # terceira jogada do jogador 1 ou 2
-            num_beads = (initial_value / decay) / decay
+            num_beads = initial_value / decay**2
         elif num_empty >= 2:
             # quarta jogada do jogador 1 ou 2
-            num_beads = ((initial_value / decay) / decay) / decay
+            num_beads = initial_value / decay**3
 
         num_beads = int(round(num_beads))
         num_beads = num_beads if num_beads > 0 else 1
