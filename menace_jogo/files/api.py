@@ -427,21 +427,21 @@ class Jogador:
                 adversario = Jogador(
                     oponente_num,
                     reforco_vitoria=0.3,
-                    reforco_derrota=0.1,
+                    reforco_derrota=-0.1,
                 )
 
             case _:
                 adversario = Jogador(oponente_num)
 
         if self.player_num == 1:
-            self, adversario, vitorias, derrotas, empates = simulacao(
+            _, adversario, vitorias, derrotas, empates = simulacao(
                 self,
                 adversario,
                 num_jogos,
             )
 
         else:
-            adversario, self, vitorias, derrotas, empates = simulacao(
+            adversario, _, vitorias, derrotas, empates = simulacao(
                 adversario,
                 self,
                 num_jogos,
