@@ -371,46 +371,31 @@ class Jogador:
                 dicionario[chave] = 0
 
         # deve haver pelo menos uma miçanga
-        if sum(list(dicionario.values())) <= 0:
+        if sum(dicionario.values()) <= 0:
             for chave in dicionario:
                 dicionario[chave] = 1
 
-    def atualizar_vitoria(self):
-        """Atualiza os dicionários de escolha em caso de vitória."""
+    def atualizar_estado(self, reforco):
+        """Atualiza os dicionários de escolha com um certo reforco."""
 
         for n, (dicionario, casa_escolhida) in enumerate(self.jogadas, start=1):
-            dicionario[casa_escolhida] += self.reforco_vitoria
+            dicionario[casa_escolhida] += reforco
             self.cleaning(dicionario)
 
         self.jogadas = []
         self.num_jogos += 1
+
+    def atualizar_vitoria(self):
+        """Atualiza os dicionários de escolha em caso de vitória."""
+        self.atualizar_estado(self.reforco_vitoria)
 
     def atualizar_derrota(self):
         """Atualiza os dicionários de escolha em caso de derrota."""
-
-        for n, (dicionario, casa_escolhida) in enumerate(self.jogadas, start=1):
-            dicionario[casa_escolhida] += self.reforco_derrota
-            self.cleaning(dicionario)
-
-        self.jogadas = []
-        self.num_jogos += 1
+        self.atualizar_estado(self.reforco_derrota)
 
     def atualizar_empate(self):
         """Atualiza os dicionários de escolha em caso de empate."""
-
-        for dicionario, casa_escolhida in self.jogadas:
-            dicionario[casa_escolhida] += self.reforco_empate
-
-            if dicionario[casa_escolhida] < 0:
-                dicionario[casa_escolhida] = 0
-
-            # se uma caixa está sem miçangas, temos que resetá-la
-            if sum(list(dicionario.values())) <= 0:
-                for k in dicionario:
-                    dicionario[k] = 1
-
-        self.jogadas = []
-        self.num_jogos += 1
+        self.atualizar_estado(self.reforco_empate)
 
     def self_train(self, num_jogos, strategy="dummy"):
         """Treina o MENACE fazendo ele jogar contra outro MENACE."""
