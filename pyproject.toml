@@ -19,6 +19,3 @@ menace = "menace_jogo.__main__:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["menace_jogo"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"menace_jogo/files/assets" = "menace_jogo/files/assets"
