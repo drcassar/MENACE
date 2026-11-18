@@ -5,58 +5,12 @@ na implementação da interface gráfica do MENACE!
 :)
 """
 
-import argparse
 import pickle
 
 import pygame as pg
 from pygame import mixer
 
 from menace_jogo.files.api import Configuracao, Jogador
-
-parser = argparse.ArgumentParser()
-
-parser.add_argument(
-    "-t",
-    "--treino",
-    type=int,
-    default=0,
-    help="Quantidade de jogos para treinar o MENACE",
-)
-
-parser.add_argument(
-    "-n",
-    "--nivel",
-    type=str,
-    default="",
-    help="Nível de desafio: fácil, médio, difícil ou impossível",
-)
-
-parser.add_argument(
-    "-p",
-    "--primeiro",
-    type=str,
-    default="MENACE",
-    help="O primeiro jogador será o MENACE ou o humano?",
-)
-
-args = parser.parse_args()
-
-if args.primeiro:
-    if args.primeiro in [
-        "menace",
-        "MENACE",
-        "Menace",
-        "máquina",
-        "Máquina",
-        "maquina",
-        "Maquina",
-    ]:
-        computer_starts = True
-    elif args.primeiro in ["humano", "Humano", "eu", "Eu"]:
-        computer_starts = False
-    else:
-        computer_starts = True
-
 
 # -------------------------------- Config: ------------------------------- #
 brain_save_path = "files/assets/brain.pickle"
@@ -332,8 +286,9 @@ class Caixinhas(pg.sprite.Sprite):
 
     """
 
-    def __init__(self, mouse, num):
+    def __init__(self, mouse, num, computer_starts=True):
         super().__init__()
+        self.computer_starts = computer_starts
         self.value = 0
         self.sprites = get_sprites(
             (19, 19),
@@ -383,7 +338,7 @@ class Caixinhas(pg.sprite.Sprite):
                 and (not pausado[1])
                 and (len(anim_grupo) == 0)
             ):
-                self.change_value(computer_starts + 1)
+                self.change_value(self.computer_starts + 1)
                 menace.jogada(
                     grupo_caixas,
                     lista_de_listas,
@@ -656,24 +611,22 @@ class Simulacao(pg.sprite.Sprite):
         # Retângulo da borda
         pg.draw.rect(self.display, (50, 50, 50), self.retangulo_borda)
 
+        total = max(self.contagem_treino, 1)
+
         # Retângulo de vitórias
-        self.retangulo_vitorias.width = 880 * (
-            self.contagem_vitorias / self.contagem_treino
-        )
+        self.retangulo_vitorias.width = 880 * (self.contagem_vitorias / total)
         self.retangulo_vitorias.midleft = ((DISPLAY_W / 2) - 440, DISPLAY_H / 2)
         pg.draw.rect(self.display, (50, 230, 50), self.retangulo_vitorias)
 
         # Retângulo de empates
         self.retangulo_empates.width = (
-            880 * (self.contagem_empates / self.contagem_treino)
+            880 * (self.contagem_empates / total)
         ) + 10
         self.retangulo_empates.midleft = self.retangulo_vitorias.midright
         pg.draw.rect(self.display, (230, 230, 50), self.retangulo_empates)
 
         # Retângulo de derrotas
-        self.retangulo_derrotas.width = 880 * (
-            self.contagem_derrotas / self.contagem_treino
-        )
+        self.retangulo_derrotas.width = 880 * (self.contagem_derrotas / total)
         self.retangulo_derrotas.midright = ((DISPLAY_W / 2) + 440, DISPLAY_H / 2)
         pg.draw.rect(self.display, (230, 50, 50), self.retangulo_derrotas)
 

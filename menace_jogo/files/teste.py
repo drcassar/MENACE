@@ -1,4 +1,4 @@
-from api import Jogador, simulacao, plot
+from menace_jogo.files.api import Jogador, simulacao, plot
 from pprint import pprint
 
 if __name__ == "__main__":

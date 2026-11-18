@@ -65,32 +65,34 @@ def main():
     TREINO = args.treino
 
     if args.nivel:
-        if args.nivel in ["facil", "Facil", "fácil", "Fácil"]:
-            TREINO = 500
-        elif args.nivel in ["medio", "Medio", "médio", "Médio"]:
-            TREINO = 1000
-        elif args.nivel in ["dificil", "Dificil", "difícil", "Difícil"]:
-            TREINO = 5000
-        elif args.nivel in ["impossivel", "Impossivel", "impossível", "Impossível"]:
-            TREINO = 10000
-        else:
-            TREINO = 0
+        niveis = {
+            "facil": 500,
+            "fácil": 500,
+            "medio": 1000,
+            "médio": 1000,
+            "dificil": 5000,
+            "difícil": 5000,
+            "impossivel": 10000,
+            "impossível": 10000,
+        }
+        nivel = args.nivel.strip().lower()
+        if nivel not in niveis:
+            parser.error(
+                f"nível inválido: {args.nivel!r}. "
+                "Use facil, medio, dificil ou impossivel."
+            )
+        TREINO = niveis[nivel]
 
-    if args.primeiro:
-        if args.primeiro in [
-            "menace",
-            "MENACE",
-            "Menace",
-            "máquina",
-            "Máquina",
-            "maquina",
-            "Maquina",
-        ]:
-            computer_starts = True
-        elif args.primeiro in ["humano", "Humano", "eu", "Eu"]:
-            computer_starts = False
-        else:
-            computer_starts = True
+    primeiro = args.primeiro.strip().lower() or "menace"
+    if primeiro in ["menace", "máquina", "maquina"]:
+        computer_starts = True
+    elif primeiro in ["humano", "eu"]:
+        computer_starts = False
+    else:
+        parser.error(
+            f"valor inválido para --primeiro: {args.primeiro!r}. "
+            "Use menace ou humano."
+        )
 
     ###############################################################################
     #                            Configurações iniciais                           #
@@ -150,7 +152,7 @@ def main():
     caixinhas_group = pg.sprite.Group()
 
     for i in range(9):
-        caixinha_nova = Caixinhas(player, i + 1)
+        caixinha_nova = Caixinhas(player, i + 1, computer_starts)
         caixinhas_group.add(caixinha_nova)
 
     # Probabilidades:
@@ -213,7 +215,7 @@ def main():
         # Simula os jogos caso ainda precise treinar
         if simulacao.contagem_treino < TREINO:
             screen.fill((0, 0, 0))
-            simulacao.simula_partida(100)
+            simulacao.simula_partida(min(100, TREINO - simulacao.contagem_treino))
             simulacao.render()
             pg.display.update()
             clock.tick(FPS)
