@@ -102,7 +102,9 @@ def main():
     clock = pg.time.Clock()
     pg.event.set_allowed([pg.KEYDOWN, pg.QUIT, pg.MOUSEBUTTONDOWN])
     font = pg.font.Font("files/assets/basis33.ttf", 50)
+    font_pequena = pg.font.Font("files/assets/basis33.ttf", 30)
     lista_konami = ["0" for _ in range(10)]
+    partidas_texto = None  # (número de partidas, superfície renderizada)
 
     # Janela:
     screen = pg.display.set_mode((DISPLAY_W, DISPLAY_H), pg.FULLSCREEN | pg.SCALED)
@@ -186,13 +188,11 @@ def main():
 
                 # Print histórico (H)
                 if event.key == pg.K_h:
-                    print(
-                        f"------------------------ \
+                    print(f"------------------------ \
     \n Vitórias do jogador: {lista_de_listas[0][-1]} \n \
     \n Vitórias do MENACE: {lista_de_listas[1][-1]} \n \
     \n Empates: {lista_de_listas[2][-1]} \n \
-    ------------------------"
-                    )
+    ------------------------")
 
                 # Recomeçar partida atual (R)
                 if event.key == pg.K_r and not PAUSADO[0]:
@@ -262,6 +262,20 @@ def main():
         if (not PAUSADO[0]) or (PAUSADO[1]):
             prob_group.draw(screen)
             prob_group.update()
+
+            # Texto partidas já jogadas por este MENACE (contra humanos ou treino):
+            num_jogos = menace.menace.num_jogos
+            if partidas_texto is None or partidas_texto[0] != num_jogos:
+                partidas_texto = (
+                    num_jogos,
+                    font_pequena.render(
+                        f"Partidas jogadas: {num_jogos}", True, (255, 255, 255)
+                    ),
+                )
+            screen.blit(
+                partidas_texto[1],
+                partidas_texto[1].get_rect(bottomleft=(20, DISPLAY_H - 20)),
+            )
 
             if len(animacao_group) == 0:
                 Player_group.draw(screen)
